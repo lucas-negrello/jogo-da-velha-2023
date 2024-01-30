@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Jogo da Velha</title>
+
+    <style>
+        h1{
+            text-align: center;
+            color: red;
+        }
+        h2{
+            text-align: center;
+            color: blueviolet;
+        }
+        body{
+            text-align: center;
+            color: black;
+            background-color: grey;
+        }
+        .tabuleiro{
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid black;
+            height: 400px;
+            width: 400px;
+            display: inline-table;
+            
+        }
+        .celula{
+            width: 111px;
+            height: 111px;
+            border: 1px solid black;
+            margin: 10px;
+            display: table-cell;
+            cursor: pointer;   
+            float:left;
+            text-align: center;
+            vertical-align: middle;
+            align-items: center;
+            justify-content: center;
+            color: blue;
+
+        }
+        .reset{
+            width: 400px;
+            height: auto;
+            border: 3px solid red;
+            cursor: pointer;
+            text-align: center;
+            display: inline-block;
+            color: red;
+            
+        }
+        .red{
+            color: red;
+            width: 111px;
+            height: 111px;
+            border: 1px solid black;
+            margin: 10px;
+            display: table-cell;
+            cursor: pointer;   
+            float:left;
+            text-align: center;
+            vertical-align: middle;
+            align-items: center;
+            justify-content: center;
+        }
+        .blue{
+            color:blue;
+            width: 111px;
+            height: 111px;
+            border: 1px solid black;
+            margin: 10px;
+            display: table-cell;
+            cursor: pointer;   
+            float:left;
+            text-align: center;
+            vertical-align: middle;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+    </style>
+
+    <script>
+
+        let fimDeJogo = false;
+        let jogadorAtual = 'O';
+
+
+        function mostrarJogadorAtual(){
+            if(jogadorAtual == 'X'){
+                document.getElementById('jogador').innerHTML = 'X';
+                }else{
+                    document.getElementById('jogador').innerHTML = 'O';    
+                }
+            
+            document.getElementById('jogador').innerHTML = jogadorAtual;
+
+        }
+
+        function alternarJogador(){
+            if(jogadorAtual == 'X'){
+                    jogadorAtual = 'O';
+                }else{
+                    jogadorAtual = 'X';
+                }
+        }
+
+        function limparTabuleiro(){
+            document.getElementById('celula1').innerHTML = '';
+            document.getElementById('celula2').innerHTML = '';
+            document.getElementById('celula3').innerHTML = '';
+            document.getElementById('celula4').innerHTML = '';
+            document.getElementById('celula5').innerHTML = '';
+            document.getElementById('celula6').innerHTML = '';
+            document.getElementById('celula7').innerHTML = '';
+            document.getElementById('celula8').innerHTML = '';
+            document.getElementById('celula9').innerHTML = '';
+            document.getElementById("anuncioVencedor").innerHTML = null;
+        }
+        
+        function colorirQuadrado(quadrado){
+            if(quadrado.innerHTML === 'X'){
+                quadrado.className = 'red';
+            }else{
+                quadrado.className = 'blue';
+            }
+        }
+
+        function verificarQuadradoOcupado(quadrado){
+            return quadrado.innerHTML != jogadorAtual;
+        }
+
+        function verificarQuadradoOcupadoContagem(quadrado){
+            return quadrado.innerHTML;
+        }
+
+        function testarTrio(n1,n2,n3){
+            let a = document.getElementById('celula' + n1).innerHTML;
+            let b = document.getElementById('celula' + n2).innerHTML;
+            let c = document.getElementById('celula' + n3).innerHTML;
+            if(a==b && b==c){
+                if(a!=0 || b!=0 || c!=0){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        }
+
+        function verificarVencedor(){
+
+            if(testarTrio(1,2,3)){
+                x=1;
+                fimDeJogo = true;
+                return x;
+            }else if(testarTrio(4,5,6)){
+                x=1;
+                fimDeJogo = true;
+                return x;
+            }else if(testarTrio(7,8,9)){
+                x=1;
+                fimDeJogo = true;
+                return x;
+            }else if(testarTrio(1,4,7)){
+                x=1;
+                fimDeJogo = true;
+                return x;
+            }else if(testarTrio(2,5,8)){
+                x=1;
+                fimDeJogo = true;
+                return x;
+            }else if(testarTrio(3,6,9)){
+                x=1;
+                fimDeJogo = true;
+                return x;
+            }else if(testarTrio(1,5,9)){
+                x=1;
+                fimDeJogo = true;
+                return x;
+            }else if(testarTrio(3,5,7)){
+                x=1;
+                fimDeJogo = true;
+                return x;
+            }else{
+                x=2
+                return x;
+            }
+            
+        }
+
+        function verificarTabuleiroCompleto(){
+            let quantidade=0;
+            for(let x=1;x<10;x++){
+                let quadrado = document.getElementById('celula'+x);
+                let ocupado = verificarQuadradoOcupadoContagem(quadrado);
+                if(ocupado == 'X' || ocupado == 'O'){
+                    quantidade++;
+                }
+            }
+            return quantidade;
+        }
+        
+
+        function jogar(quadrado){
+            if(fimDeJogo){
+                fimDeJogo=false;
+                return;
+            }
+            
+
+            mostrarJogadorAtual();
+            if (verificarQuadradoOcupado(quadrado)){
+                alternarJogador();
+                
+            }
+            quadrado.innerHTML = jogadorAtual;
+            
+
+            colorirQuadrado(quadrado);
+
+            if(verificarVencedor()===1){
+                document.getElementById("anuncioVencedor").innerHTML = ('Jogador ' + jogadorAtual + ' venceu!!');
+                setTimeout(limparTabuleiro,1000);
+                return;
+
+            }else{
+                if (verificarTabuleiroCompleto()===9){
+                    document.getElementById("anuncioVencedor").innerHTML = ('Empate!!!');
+                    setTimeout(limparTabuleiro,1000);
+                    return;
+                }
+            }
+        }
+    </script>
+
+</head>
+
+<body>
+    <h1>Jogo da Velha</h1>
+    <h4 id="anuncioVencedor" class="titulo2"> 
+    </h4>
+    <h2>
+        Vez do jogador:
+        <span id="jogador">X</span>
+    </h2> 
+    <div class="tabuleiro">
+        <div style="font-size:100px" class="celula" id="celula1" onclick="jogar(this)">
+
+        </div>
+        <div style="font-size:100px"  class="celula" id="celula2" onclick="jogar(this)">
+
+        </div>
+        <div style="font-size:100px"  class="celula" id="celula3" onclick="jogar(this)">
+
+        </div>
+        <div style="font-size:100px"  class="celula" id="celula4" onclick="jogar(this)">
+
+        </div>
+        <div style="font-size:100px"  class="celula" id="celula5" onclick="jogar(this)">
+
+        </div>
+        <div style="font-size:100px"  class="celula" id="celula6" onclick="jogar(this)">
+
+        </div>
+        <div style="font-size:100px"  class="celula" id="celula7" onclick="jogar(this)">
+
+        </div>
+        <div style="font-size:100px"  class="celula" id="celula8" onclick="jogar(this)">
+
+        </div>
+        <div style="font-size:100px"  class="celula" id="celula9" onclick="jogar(this)">
+
+        </div>
+    </div>
+    <br>
+    <div style="font-size: 44px"  class="reset" id="resetar"  onclick="limparTabuleiro()">
+        REINICIAR TABULEIRO
+    </div>
+    
+</body>
+
+</html>
